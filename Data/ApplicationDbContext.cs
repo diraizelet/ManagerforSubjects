@@ -59,10 +59,10 @@ namespace ManagerforSubjects.Data
             }
         }
 
-        public void AddSubTopicToTopic(int topicId, string subTopicName, string description)
+        public async Task AddSubTopicToTopicAsync(int topicId, string subTopicName, string description)
         {
-            // Retrieve the Topic with its SubTopics
-            var topic = Topics.Include(t => t.SubTopics).FirstOrDefault(t => t.Id == topicId);
+            // Retrieve the Topic along with its SubTopics
+            var topic = await Topics.Include(t => t.SubTopics).FirstOrDefaultAsync(t => t.Id == topicId);
 
             if (topic != null)
             {
@@ -77,8 +77,8 @@ namespace ManagerforSubjects.Data
                 // Add the SubTopic to the Topic's SubTopics list
                 topic.SubTopics.Add(subTopic);
 
-                // Save changes to persist the new SubTopic and relationship
-                SaveChanges();
+                // Save changes asynchronously to persist the new SubTopic and relationship
+                await SaveChangesAsync();
             }
         }
     }

@@ -5,13 +5,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Topic page</p>
-
-    <!-- New Topic Button -->
-    <a href="@Url.Action("Create", "Topic")" class="btn btn-primary mb-3">
-        New Topic
-    </a>
+    <h1 class="display-4">Topics</h1>
 
     <!-- Display a table of topics -->
     <table class="table table-striped mt-3">
@@ -20,6 +14,7 @@
                 <th>Topic Name</th>
                 <th>Subject</th>
                 <th>Description</th>
+                <th>Actions</th> <!-- Add a new column for actions -->
             </tr>
         </thead>
         <tbody>
@@ -27,8 +22,14 @@
             {
                 <tr>
                     <td>@topic.Name</td>
-                    <td>@topic.Subject.Name</td> <!-- Assuming you want to show the subject name -->
+                    <td>@topic.Subject.Name</td> <!-- Show subject name -->
                     <td>@topic.Description</td>
+                    <td>
+                        <!-- Button to create a new SubTopic for this topic -->
+                        <a href="@Url.Action("Create", "SubTopic", new { topicId = topic.Id })" class="btn btn-primary">
+                            New SubTopic
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>

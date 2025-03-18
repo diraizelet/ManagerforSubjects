@@ -1,0 +1,24 @@
+﻿@model ManagerforSubjects.Models.SubTopic
+
+@{
+    ViewData["Title"] = "Create New SubTopic";
+}
+
+<h1>Create New SubTopic for Topic: @ViewBag.TopicName</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="Name"><strong>SubTopic Name</strong></label>
+        <input type="text" class="form-control" id="Name" asp-for="Name" placeholder="Enter SubTopic Name" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Description"><strong>Description</strong></label>
+        <input type="text" class="form-control" id="Description" asp-for="Description" placeholder="Enter Description" required />
+    </div>
+
+    <!-- Hidden input to bind the TopicId -->
+    <input type="hidden" asp-for="TopicId" value="@Model.TopicId" />
+
+    <button type="submit" class="btn btn-success">Create SubTopic</button>
+</form>

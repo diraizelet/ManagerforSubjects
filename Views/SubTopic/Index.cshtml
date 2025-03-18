@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ManagerforSubjects.Models.SubTopic>
+
+@{
+    ViewData["Title"] = "SubTopics";
+}
+
+<h1>SubTopics</h1>
+
+<!-- Display a table of SubTopics -->
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Topic</th>
+            <th>SubTopic Name</th>
+            <th>SubTopic Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var subTopic in Model)
+        {
+            <tr>
+                <td>@subTopic.Topic.Subject.Name</td> <!-- Subject name -->
+                <td>@subTopic.Topic.Name</td> <!-- Topic name -->
+                <td>@subTopic.Name</td> <!-- SubTopic name -->
+                <td>@subTopic.Description</td> <!-- SubTopic description -->
+            </tr>
+        }
+    </tbody>
+</table>

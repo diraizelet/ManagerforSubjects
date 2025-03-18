@@ -1,2 +1,2 @@
 ﻿-->select * From subjects;
-select * From Topics;
+select * From SubTopics;
