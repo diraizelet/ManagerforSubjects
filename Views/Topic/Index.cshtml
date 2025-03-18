@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ManagerforSubjects.Models.Topic>
+
+@{
+    ViewData["Title"] = "Topics";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Topic page</p>
+
+    <!-- New Topic Button -->
+    <a href="@Url.Action("Create", "Topic")" class="btn btn-primary mb-3">
+        New Topic
+    </a>
+
+    <!-- Display a table of topics -->
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Topic Name</th>
+                <th>Subject</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var topic in Model)
+            {
+                <tr>
+                    <td>@topic.Name</td>
+                    <td>@topic.Subject.Name</td> <!-- Assuming you want to show the subject name -->
+                    <td>@topic.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
