@@ -14,6 +14,22 @@ namespace ManagerforSubjects.Controllers
             _context = context;
         }
         // GET: SubTopics
+        public IActionResult Edit(int id)
+        {
+            var subTopic = _context.SubTopics.Include(s => s.Topic)
+                                              .FirstOrDefault(s => s.Id == id);
+
+            if (subTopic == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Topics = _context.Topics.ToList(); // Ensure topics are passed
+
+            return View(subTopic);
+        }
+
+
         public async Task<IActionResult> Index()
         {
             // Retrieve all subtopics along with their associated topics and subjects
@@ -69,5 +85,59 @@ namespace ManagerforSubjects.Controllers
             return View(subTopic);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, SubTopic subTopic)
+        {
+            // Check if the ID matches the SubTopic's ID
+            if (id != subTopic.Id)
+            {
+                return NotFound(); // If ID doesn't match, return NotFound
+            }
+
+            
+                try
+                {
+                    // Update the SubTopic entity in the database
+                    _context.Update(subTopic);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    // Handle concurrency issues if any
+                    if (!_context.SubTopics.Any(s => s.Id == subTopic.Id))
+                    {
+                        return NotFound(); // If SubTopic does not exist anymore
+                    }
+                    else
+                    {
+                        throw; // Re-throw if a different exception occurred
+                    }
+                }
+
+                return RedirectToAction(nameof(Index)); // Redirect to the Index page after successful edit
+            
+
+            // If the model is not valid, return the view with the current data
+            ViewBag.Topics = _context.Topics.ToList(); // Ensure Topics are still passed in case of validation errors
+            return View(subTopic); // Return to the Edit page with errors
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var subTopic = await _context.SubTopics.FindAsync(id);
+
+            if (subTopic == null)
+            {
+                return NotFound();
+            }
+
+            _context.SubTopics.Remove(subTopic);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
     }
 }

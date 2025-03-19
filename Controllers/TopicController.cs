@@ -1,6 +1,7 @@
 ﻿using ManagerforSubjects.Data;
 using ManagerforSubjects.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ManagerforSubjects.Controllers
@@ -66,8 +67,70 @@ namespace ManagerforSubjects.Controllers
 
 
 
+        // GET: Topic/Edit/{id}
+        public async Task<IActionResult> Edit(int id)
+        {
+            var topic = await _context.Topics.FindAsync(id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
 
+            ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", topic.SubjectId);
+            return View(topic);
+        }
 
+        // POST: Topic/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Topic topic)
+        {
+            if (id != topic.Id)
+            {
+                return BadRequest();
+            }
 
+            
+                try
+                {
+                    _context.Update(topic);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Topics.Any(t => t.Id == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            
+
+            ViewBag.Subjects = new SelectList(_context.Subjects, "Id", "Name", topic.SubjectId);
+            return View(topic);
+        }
+
+        // POST: Topic/Delete/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var topic = await _context.Topics.FindAsync(id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            _context.Topics.Remove(topic);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
+
+
+
 }

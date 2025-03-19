@@ -14,6 +14,7 @@
             <th>Topic</th>
             <th>SubTopic Name</th>
             <th>SubTopic Description</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -24,7 +25,22 @@
                 <td>@subTopic.Topic.Name</td> <!-- Topic name -->
                 <td>@subTopic.Name</td> <!-- SubTopic name -->
                 <td>@subTopic.Description</td> <!-- SubTopic description -->
+                <td>
+                    <a asp-controller="SubTopic" asp-action="Edit" asp-route-id="@subTopic.Id" class="btn btn-warning">Edit</a>
+                    <button class="btn btn-danger" onclick="confirmDelete(@subTopic.Id)">Delete</button>
+
+                    <form id="delete-form-@subTopic.Id" method="post" asp-action="Delete" asp-route-id="@subTopic.Id" style="display: none;">
+                        @Html.AntiForgeryToken()
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+<script>
+    function confirmDelete(subTopicId) {
+        if (confirm("Are you sure you want to delete this subtopic?")) {
+            document.getElementById("delete-form-" + subTopicId).submit();
+        }
+    }
+</script>

@@ -1,24 +1,22 @@
 ﻿@model IEnumerable<ManagerforSubjects.Models.Subject>
 
 @{
-    ViewData["Title"] = "Subject";
+    ViewData["Title"] = "Subjects";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Subject page</p>
+    <h1 class="display-4">Subjects</h1>
+    <p>Manage Subjects</p>
 
     <!-- New Subject Button -->
-    <a href="@Url.Action("Create", "Subject")" class="btn btn-primary">
-        New Subject
-    </a>
+    <a href="@Url.Action("Create", "Subject")" class="btn btn-primary">New Subject</a>
 
-    <!-- Display a table of subjects -->
     <table class="table table-striped mt-3">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Actions</th> <!-- Actions column -->
             </tr>
         </thead>
         <tbody>
@@ -27,8 +25,30 @@
                 <tr>
                     <td>@subject.Name</td>
                     <td>@subject.Description</td>
+                    <td>
+                        <!-- Edit Button -->
+                        <a href="@Url.Action("Edit", "Subject", new { id = subject.Id })" class="btn btn-warning">
+                            Edit
+                        </a>
+
+                        <!-- Delete Button -->
+                        <button class="btn btn-danger" onclick="confirmDelete(@subject.Id)">Delete</button>
+
+                        <!-- Delete Form -->
+                        <form id="delete-form-@subject.Id" method="post" asp-action="Delete" asp-route-id="@subject.Id" style="display: none;">
+                            @Html.AntiForgeryToken()
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+<script>
+    function confirmDelete(subjectId) {
+        if (confirm("Are you sure you want to delete this subject?")) {
+            document.getElementById("delete-form-" + subjectId).submit();
+        }
+    }
+</script>
