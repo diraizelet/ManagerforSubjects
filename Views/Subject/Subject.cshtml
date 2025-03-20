@@ -30,7 +30,9 @@
                         <a href="@Url.Action("Edit", "Subject", new { id = subject.Id })" class="btn btn-warning">
                             Edit
                         </a>
-
+                        <a href="@Url.Action("Details", "Subject", new { id = subject.Id })" class="btn btn-info">
+                            Details
+                        </a>
                         <!-- Delete Button -->
                         <button class="btn btn-danger" onclick="confirmDelete(@subject.Id)">Delete</button>
 

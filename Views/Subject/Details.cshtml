@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ManagerforSubjects.Models.Subject>
+
+@{
+    ViewData["Title"] = "Subject Details";
+}
+
+<h1 class="display-4">Subjects and Topics</h1>
+
+<div class="accordion" id="subjectAccordion">
+    @foreach (var subject in Model)
+    {
+        <div class="card">
+            <div class="card-header" id="heading-@subject.Id">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-@subject.Id" aria-expanded="true">
+                        @subject.Name
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapse-@subject.Id" class="collapse" aria-labelledby="heading-@subject.Id" data-parent="#subjectAccordion">
+                <div class="card-body">
+                    <p>@subject.Description</p>
+
+                    <div class="accordion" id="topicAccordion-@subject.Id">
+                        @foreach (var topic in subject.Topics)
+                        {
+                            <div class="card">
+                                <div class="card-header" id="topicHeading-@topic.Id">
+                                    <h3 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#topicCollapse-@topic.Id" aria-expanded="true">
+                                            @topic.Name
+                                        </button>
+                                    </h3>
+                                </div>
+
+                                <div id="topicCollapse-@topic.Id" class="collapse" aria-labelledby="topicHeading-@topic.Id" data-parent="#topicAccordion-@subject.Id">
+                                    <div class="card-body">
+                                        <p>@topic.Description</p>
+
+                                        <ul>
+                                            @foreach (var subTopic in topic.SubTopics)
+                                            {
+                                                <li>@subTopic.Name - @subTopic.Description</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Bootstrap for Collapsing Functionality -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>

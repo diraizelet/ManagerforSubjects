@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using ManagerforSubjects.Data; 
 using ManagerforSubjects.Models;
 namespace ManagerforSubjects.Controllers
@@ -41,6 +40,16 @@ namespace ManagerforSubjects.Controllers
             }
 
             return View(subject); // If the model state is invalid, return the view with the model
+        }
+
+        public async Task<IActionResult> Details()
+        {
+            var subjects = await _context.Subjects
+                .Include(s => s.Topics)
+                .ThenInclude(t => t.SubTopics)
+                .ToListAsync();
+
+            return View(subjects);
         }
 
 
