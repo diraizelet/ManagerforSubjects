@@ -44,6 +44,12 @@ namespace ManagerforSubjects.Controllers
 
 
 
+        public async Task<JsonResult> GetSubjects()
+        {
+            var subjects = await _context.Subjects.Select(s => new { s.Id, s.Name }).ToListAsync();
+            return Json(subjects);
+        }
+
 
 
         // POST: Topic/Create

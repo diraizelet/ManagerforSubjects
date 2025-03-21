@@ -10,15 +10,33 @@ function confirmDeleteTopic(topicId) {
 
 
 function openCreateTopic() {
-    document.getElementById("topicModalLabel").innerText = "Create New Topic";
-    document.getElementById("topicForm").action = "/Topic/Create";
-    document.getElementById("topicId").value = "";
-    document.getElementById("topicName").value = "";
-    document.getElementById("topicDescription").value = "";
-    document.getElementById("topicSubjectId").value = "";
+    $.get("/Topic/GetSubjects", function (data) {
+        let subjectDropdown = $("#SubjectId");
+        subjectDropdown.empty();
+        subjectDropdown.append('<option value="">Select Subject</option>');
 
-    $("#topicModal").modal("show");
+        if (data.length > 0) {
+            data.forEach(subject => {
+                subjectDropdown.append(`<option value="${subject.id}">${subject.name}</option>`);
+            });
+        } else {
+            subjectDropdown.append('<option value="">No subjects available</option>');
+        }
+
+        $("#topicModalLabel").text("Create New Topic");  // Ensure title is correct
+        $("#topicForm").attr("action", "/Topic/Create"); // Reset action for create
+        $("#topicForm")[0].reset(); // Reset form fields
+
+        $("#topicModal").modal("show");
+    }).fail(function () {
+        alert("Error fetching subjects. Please try again.");
+    });
 }
+
+
+
+
+
 
 function openEditTopic(id, name, description, subjectId) {
     document.getElementById("topicModalLabel").innerText = "Edit Topic";

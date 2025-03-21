@@ -1,32 +1,27 @@
-﻿
-<div class="modal fade" id="topicModal" tabindex="-1" role="dialog" aria-labelledby="topicModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+﻿<div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="topicModalLabel">Manage Topic</h5>
+                <h5 class="modal-title" id="topicModalLabel">Create New Topic</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="topicForm">
-                    @Html.AntiForgeryToken()
-
-                    <input type="hidden" id="topicId" name="Id" />
-
+                <form id="topicForm" method="post" asp-action="Create">
                     <div class="form-group">
-                        <label for="topicName">Topic Name</label>
-                        <input type="text" class="form-control" id="topicName" name="Name" required />
+                        <label for="Name">Topic Name</label>
+                        <input type="text" class="form-control" id="Name" name="Name" required />
                     </div>
 
                     <div class="form-group">
-                        <label for="topicDescription">Description</label>
-                        <textarea class="form-control" id="topicDescription" name="Description" required></textarea>
+                        <label for="Description">Description</label>
+                        <textarea class="form-control" id="Description" name="Description" required></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="topicSubjectId">Subject</label>
-                        <select class="form-control" id="topicSubjectId" name="SubjectId" required>
+                        <label for="SubjectId">Subject</label>
+                        <select class="form-control" id="SubjectId" name="SubjectId" required>
                             <option value="">Select Subject</option>
                             @if (ViewBag.Subjects != null && ((List<ManagerforSubjects.Models.Subject>)ViewBag.Subjects).Any())
                             {
@@ -35,10 +30,14 @@
                                     <option value="@subject.Id">@subject.Name</option>
                                 }
                             }
+                            else
+                            {
+                                <option value="">No subjects available</option>
+                            }
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-success">Create</button>
                 </form>
             </div>
         </div>
