@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ManagerforSubjects.Models.SubTopic>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No subtopics available for this topic.</p>
+}
+else
+{
+    <h3>Subtopics</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>SubTopic Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var subTopic in Model)
+            {
+                <tr>
+                    <td>@subTopic.Name</td>
+                    <td>@subTopic.Description</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="openEditSubTopic(@subTopic.Id, '@subTopic.Name', '@subTopic.Description')">Edit</button>
+                        <button class="btn btn-danger" onclick="confirmDeleteSubTopic(@subTopic.Id)">Delete</button>
+
+                        <!-- Hidden Delete Form -->
+                        <form id="delete-form-subtopic-@subTopic.Id" method="post" asp-action="Delete" asp-route-id="@subTopic.Id" style="display: none;">
+                            @Html.AntiForgeryToken()
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+        function confirmDeleteSubTopic(subTopicId) {
+            if (confirm("Are you sure you want to delete this subtopic?")) {
+                document.getElementById(`delete-form-subtopic-${subTopicId}`).submit();
+            }
+        }
+    </script>
+
+
+}

@@ -14,6 +14,11 @@ namespace ManagerforSubjects.Controllers
         {
             _context = context;
         }
+        public IActionResult GetBySubject(int subjectId)
+        {
+            var topics = _context.Topics.Where(t => t.SubjectId == subjectId).ToList();
+            return PartialView("_TopicsTable", topics);
+        }
 
         // GET: Topic
         public async Task<IActionResult> Index()

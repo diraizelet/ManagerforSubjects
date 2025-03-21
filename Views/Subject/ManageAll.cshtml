@@ -1,26 +1,17 @@
-﻿@model List<ManagerforSubjects.Models.Subject>
+﻿@model IEnumerable<ManagerforSubjects.Models.Subject>
 
 @{
-    ViewData["Title"] = "Manage All";
+    ViewData["Title"] = "Subjects and Topics";
 }
 
-<div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">Manage Subjects, Topics, and Subtopics</h1>
+<div class="container">
+    <h2 class="text-center">Subjects</h2>
 
-    <!-- Add Subject Form -->
-    <div>
-        <h2 class="text-xl font-bold mb-2">Add New Subject</h2>
-        <div>
-            <input type="text" id="newSubjectName" placeholder="Subject Name">
-            <input type="text" id="newSubjectDesc" placeholder="Description">
-            <button onclick="addSubject()" class="primary-button">Add Subject</button>
-        </div>
-    </div>
-
-    <table border="1" cellspacing="0" cellpadding="5" width="100%">
+    <!-- Subjects Table (Upper Half) -->
+    <table class="table table-bordered mt-3">
         <thead>
             <tr>
-                <th>Subject Name</th>
+                <th>Name</th>
                 <th>Description</th>
                 <th>Actions</th>
             </tr>
@@ -29,75 +20,59 @@
             @foreach (var subject in Model)
             {
                 <tr>
-                    <td>
-                        <button onclick="toggleTopics(@subject.Id)" class="primary-button">&#9660;</button>
-                        @subject.Name
-                    </td>
+                    <td>@subject.Name</td>
                     <td>@subject.Description</td>
                     <td>
-                        <button onclick="editSubject(@subject.Id)" class="primary-button">Edit Subject</button>
-                        <button onclick="deleteSubject(@subject.Id)" class="primary-button">Delete Subject</button>
+                        <button class="btn btn-info" onclick="loadTopics(@subject.Id)">View Topics</button>
+                        <button class="btn btn-warning" onclick="openEditModal(@subject.Id, '@subject.Name', '@subject.Description')">Edit</button>
+                        <button class="btn btn-danger" onclick="confirmDelete(@subject.Id)">Delete</button>
+
+                        <!-- Hidden Delete Form -->
+                        <form id="delete-form-@subject.Id" method="post" asp-action="Delete" asp-route-id="@subject.Id" style="display: none;">
+                            @Html.AntiForgeryToken()
+                        </form>
                     </td>
                 </tr>
-            <tbody id="topics-@subject.Id" style="display: none;">
-                    @foreach (var topic in subject.Topics)
-                    {
-                    <tr>
-                        <td style="padding-left: 30px;">
-                            <button onclick="toggleSubTopics(@topic.Id)" class="primary-button">&#9660;</button>
-                                @topic.Name
-                        </td>
-                        <td>@topic.Description</td>
-                        <td>
-                            <button onclick="editTopic(@topic.Id)" class="primary-button">Edit Topic</button>
-                            <button onclick="deleteTopic(@topic.Id)" class="primary-button">Delete Topic</button>
-                        </td>
-                    </tr>
-                <tbody id="subtopics-@topic.Id" style="display: none;">
-                            @foreach (var subTopic in topic.SubTopics)
-                            {
-                        <tr>
-                            <td style="padding-left: 60px;">@subTopic.Name</td>
-                            <td>@subTopic.Description</td>
-                            <td>
-                                <button onclick="editSubTopic(@subTopic.Id)" class="primary-button">Edit SubTopic</button>
-                                <button onclick="deleteSubTopic(@subTopic.Id)" class="primary-button">Delete SubTopic</button>
-                            </td>
-                        </tr>
-                            }
-                </tbody>
-                    }
-            </tbody>
             }
         </tbody>
     </table>
+
+    <!-- Topics Table (Bottom-Left Half, Loaded Dynamically) -->
+    <div id="topicsContainer" class="mt-4"></div>
+</div>
+<div id="subtopics-table">
+    <!-- Subtopics table will be loaded here -->
 </div>
 
 <script>
-    function addSubject() {
-        var name = document.getElementById("newSubjectName").value;
-        var desc = document.getElementById("newSubjectDesc").value;
-        fetch('/Subject/Create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Name: name, Description: desc })
-        }).then(response => location.reload());
+    function loadTopics(subjectId) {
+        fetch(`/Topic/GetBySubject?subjectId=${subjectId}`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("topicsContainer").innerHTML = data;
+            });
     }
 
-    function deleteSubject(id) {
-        if (confirm("Delete this subject?")) {
-            fetch(`/Subject/Delete/${id}`, { method: 'POST' })
-                .then(response => location.reload());
+    function confirmDelete(subjectId) {
+        if (confirm("Are you sure you want to delete this subject?")) {
+            document.getElementById("delete-form-" + subjectId).submit();
         }
     }
 
-    function toggleTopics(subjectId) {
-        var element = document.getElementById("topics-" + subjectId);
-        element.style.display = element.style.display === "none" ? "table-row-group" : "none";
+    function openEditModal(id, name, description) {
+        alert(`Edit Subject: ${name}`);
     }
-
-    function toggleSubTopics(topicId) {
-        var element = document.getElementById("subtopics-" + topicId);
-        element.style.display = element.style.display === "none" ? "table-row-group" : "none";
+    function loadSubTopics(topicId) {
+        $.ajax({
+            url: '/SubTopic/GetByTopic',
+            type: 'GET',
+            data: { topicId: topicId },
+            success: function (data) {
+                $("#subtopics-table").html(data); // Render subtopics in the correct section
+            },
+            error: function () {
+                alert("Failed to load subtopics.");
+            }
+        });
     }
 </script>

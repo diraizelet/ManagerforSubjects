@@ -13,7 +13,15 @@ namespace ManagerforSubjects.Controllers
         {
             _context = context;
         }
+
+        public IActionResult GetByTopic(int topicId)
+        {
+            var subTopics = _context.SubTopics.Where(st => st.TopicId == topicId).ToList();
+            return PartialView("~/Views/SubTopic/_SubTopicsTable.cshtml", subTopics);
+        }
+
         // GET: SubTopics
+
         public IActionResult Edit(int id)
         {
             var subTopic = _context.SubTopics.Include(s => s.Topic)
