@@ -6,8 +6,12 @@
 }
 else
 {
-    <h3>Topics</h3>
-    <table class="table table-bordered">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Topics</h3>
+        <button class="btn btn-success" onclick="openCreateTopic()">New Topic</button>
+    </div>
+
+    <table class="table table-bordered mt-3">
         <thead>
             <tr>
                 <th>Topic Name</th>
@@ -23,7 +27,7 @@ else
                     <td>@topic.Description</td>
                     <td>
                         <button class="btn btn-info" onclick="loadSubTopics(@topic.Id)">View Subtopics</button>
-                        <button class="btn btn-warning" onclick="openEditTopic(@topic.Id, '@topic.Name', '@topic.Description')">Edit</button>
+                        <button class="btn btn-warning" onclick="openEditTopic(@topic.Id, '@topic.Name', '@topic.Description', @topic.SubjectId)">Edit</button>
                         <button class="btn btn-danger" onclick="confirmDeleteTopic(@topic.Id)">Delete</button>
 
                         <!-- Hidden Delete Form -->
@@ -38,3 +42,8 @@ else
 }
 
 <div id="subtopicsContainer" class="mt-4"></div>
+
+<!-- Include the modal -->
+<partial name="_TopicModal" />
+
+<script src="~/js/site.js"></script>

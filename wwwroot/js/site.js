@@ -7,3 +7,26 @@ function confirmDeleteTopic(topicId) {
         document.getElementById(`delete-form-topic-${topicId}`).submit();
     }
 }
+
+
+function openCreateTopic() {
+    document.getElementById("topicModalLabel").innerText = "Create New Topic";
+    document.getElementById("topicForm").action = "/Topic/Create";
+    document.getElementById("topicId").value = "";
+    document.getElementById("topicName").value = "";
+    document.getElementById("topicDescription").value = "";
+    document.getElementById("topicSubjectId").value = "";
+
+    $("#topicModal").modal("show");
+}
+
+function openEditTopic(id, name, description, subjectId) {
+    document.getElementById("topicModalLabel").innerText = "Edit Topic";
+    document.getElementById("topicForm").action = "/Topic/Edit/" + id;
+    document.getElementById("topicId").value = id;
+    document.getElementById("topicName").value = name;
+    document.getElementById("topicDescription").value = description;
+    document.getElementById("topicSubjectId").value = subjectId;
+
+    $("#topicModal").modal("show");
+}
