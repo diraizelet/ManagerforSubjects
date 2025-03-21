@@ -1,0 +1,103 @@
+﻿@model List<ManagerforSubjects.Models.Subject>
+
+@{
+    ViewData["Title"] = "Manage All";
+}
+
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Manage Subjects, Topics, and Subtopics</h1>
+
+    <!-- Add Subject Form -->
+    <div>
+        <h2 class="text-xl font-bold mb-2">Add New Subject</h2>
+        <div>
+            <input type="text" id="newSubjectName" placeholder="Subject Name">
+            <input type="text" id="newSubjectDesc" placeholder="Description">
+            <button onclick="addSubject()" class="primary-button">Add Subject</button>
+        </div>
+    </div>
+
+    <table border="1" cellspacing="0" cellpadding="5" width="100%">
+        <thead>
+            <tr>
+                <th>Subject Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var subject in Model)
+            {
+                <tr>
+                    <td>
+                        <button onclick="toggleTopics(@subject.Id)" class="primary-button">&#9660;</button>
+                        @subject.Name
+                    </td>
+                    <td>@subject.Description</td>
+                    <td>
+                        <button onclick="editSubject(@subject.Id)" class="primary-button">Edit Subject</button>
+                        <button onclick="deleteSubject(@subject.Id)" class="primary-button">Delete Subject</button>
+                    </td>
+                </tr>
+            <tbody id="topics-@subject.Id" style="display: none;">
+                    @foreach (var topic in subject.Topics)
+                    {
+                    <tr>
+                        <td style="padding-left: 30px;">
+                            <button onclick="toggleSubTopics(@topic.Id)" class="primary-button">&#9660;</button>
+                                @topic.Name
+                        </td>
+                        <td>@topic.Description</td>
+                        <td>
+                            <button onclick="editTopic(@topic.Id)" class="primary-button">Edit Topic</button>
+                            <button onclick="deleteTopic(@topic.Id)" class="primary-button">Delete Topic</button>
+                        </td>
+                    </tr>
+                <tbody id="subtopics-@topic.Id" style="display: none;">
+                            @foreach (var subTopic in topic.SubTopics)
+                            {
+                        <tr>
+                            <td style="padding-left: 60px;">@subTopic.Name</td>
+                            <td>@subTopic.Description</td>
+                            <td>
+                                <button onclick="editSubTopic(@subTopic.Id)" class="primary-button">Edit SubTopic</button>
+                                <button onclick="deleteSubTopic(@subTopic.Id)" class="primary-button">Delete SubTopic</button>
+                            </td>
+                        </tr>
+                            }
+                </tbody>
+                    }
+            </tbody>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function addSubject() {
+        var name = document.getElementById("newSubjectName").value;
+        var desc = document.getElementById("newSubjectDesc").value;
+        fetch('/Subject/Create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Name: name, Description: desc })
+        }).then(response => location.reload());
+    }
+
+    function deleteSubject(id) {
+        if (confirm("Delete this subject?")) {
+            fetch(`/Subject/Delete/${id}`, { method: 'POST' })
+                .then(response => location.reload());
+        }
+    }
+
+    function toggleTopics(subjectId) {
+        var element = document.getElementById("topics-" + subjectId);
+        element.style.display = element.style.display === "none" ? "table-row-group" : "none";
+    }
+
+    function toggleSubTopics(topicId) {
+        var element = document.getElementById("subtopics-" + topicId);
+        element.style.display = element.style.display === "none" ? "table-row-group" : "none";
+    }
+</script>

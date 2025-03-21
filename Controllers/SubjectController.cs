@@ -95,6 +95,17 @@ namespace ManagerforSubjects.Controllers
             
             return View(subject);
         }
+        public async Task<IActionResult> ManageAll()
+        {
+            var subjects = await _context.Subjects
+                .Include(s => s.Topics)
+                .ThenInclude(t => t.SubTopics)
+                .ToListAsync();
+
+            return View(subjects);
+        }
+
+
 
         // POST: Subject/Delete/{id}
         [HttpPost]
